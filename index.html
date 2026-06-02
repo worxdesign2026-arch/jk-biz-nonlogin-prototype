@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOBKOREA 기업 솔루션</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #1a56db;
+      --green: #16a34a;
+      --text: #222222;
+      --text-sub: #4b5563;
+      --text-muted: #9ca3af;
+      --border: #e8e8e8;
+      --bg-light: #f9fafb;
+      --bg-gray: #f3f4f6;
+      --white: #ffffff;
+      --gnb-bg: #222222;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      color: var(--text); background: var(--white); font-size: 16px; line-height: 1.6;
+      padding-bottom: 64px;
+    }
+
+    /* ─── GNB ─── */
+    #gnb {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: transparent;
+      padding: 10px 10px;
+    }
+    .gnb-inner {
+      background: var(--gnb-bg);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      max-width: calc(100% - 20px); margin: 0 10px; width: 100%;
+      padding: 12px 12px 12px 25px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .gnb-left { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+    .gnb-logo {
+      font-size: 18px; font-weight: 900; color: var(--white);
+      letter-spacing: -0.5px; white-space: nowrap; flex-shrink: 0;
+      margin-right: 10px;
+    }
+    .gnb-nav { display: flex; gap: 0; align-items: center; }
+    .gnb-nav a, .gnb-nav button {
+      color: #ffffff; font-size: 16px; font-weight: 700; text-decoration: none;
+      padding: 6px 12px; border-radius: 6px; white-space: nowrap;
+      background: transparent; border: none; cursor: pointer;
+      transition: background 0.15s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .gnb-nav a:hover { background: rgba(255,255,255,0.08); }
+    .gnb-nav a.active { background: #444444; color: var(--white); }
+    .gnb-divider {
+      width: 1px; height: 16px; background: #6a6a6a; margin: 0 2px; flex-shrink: 0;
+    }
+    .gnb-onepick-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .gnb-chevron { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.8; }
+    .gnb-right { flex-shrink: 0; }
+    .gnb-btn-login {
+      border: 1px solid #e8e8e8; color: #222; background: #fff;
+      font-size: 13px; font-weight: 600; padding: 6px 8px; border-radius: 6px;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .gnb-btn-login:hover { background: #f3f4f6; }
+
+    /* ─── GNB height offset ─── */
+    .gnb-offset { height: 76px; }
+
+    /* ─── NOTICE ─── */
+    #notice {
+      background: #ffffff; border-bottom: 1px solid #e0e0e0;
+      padding: 0 24px; height: 40px; display: flex; align-items: center;
+    }
+    .notice-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .notice-tag {
+      background: #444; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+    }
+    .notice-text { font-size: 13px; color: #555; }
+    .notice-text a { color: #333; text-decoration: underline; }
+
+    /* ─── HERO ─── */
+    #hero {
+      background: linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%);
+      padding: 96px 24px 80px;
+      text-align: center;
+    }
+    .hero-label {
+      display: inline-block; background: #dbeafe; color: #1d4ed8;
+      font-size: 13px; font-weight: 700; padding: 4px 14px; border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero-h1 {
+      font-size: clamp(32px, 5vw, 52px); font-weight: 900;
+      line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--text-sub); margin-bottom: 48px; line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px;
+      margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 36px; font-weight: 900; color: var(--primary);
+      display: block; letter-spacing: -1px;
+    }
+    .stat-label { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
+    .hero-cta {
+      background: #111827; color: var(--white); border: none;
+      font-size: 17px; font-weight: 700; padding: 16px 40px; border-radius: 8px;
+      cursor: pointer; transition: background 0.15s; margin-bottom: 20px;
+    }
+    .hero-cta:hover { background: #1f2937; }
+    .hero-note { font-size: 12px; color: var(--text-muted); }
+
+    /* ─── LOGO MARQUEE ─── */
+    .logo-marquee-wrap {
+      margin-top: 48px; overflow: hidden; position: relative;
+    }
+    .logo-marquee-wrap::before,
+    .logo-marquee-wrap::after {
+      content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
+      pointer-events: none;
+    }
+    .logo-marquee-wrap::before { left: 0; background: linear-gradient(to right, #f0f4ff, transparent); }
+    .logo-marquee-wrap::after  { right: 0; background: linear-gradient(to left, #f5f5fa, transparent); }
+    .logo-marquee-track {
+      display: flex; gap: 24px; width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+    .logo-marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .logo-box {
+      width: 120px; height: 48px; background: rgba(255,255,255,0.7);
+      border: 1px solid #dde3f0;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; color: #9ca3af; flex-shrink: 0;
+    }
+    .logos-caption { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+
+    /* ─── INTRO BANNER ─── */
+    #intro {
+      background: var(--bg-light); border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border); padding: 48px 24px; text-align: center;
+    }
+    .intro-inner { max-width: 680px; margin: 0 auto; }
+    .intro-tag { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+    .intro-h2 { font-size: 28px; font-weight: 800; margin-bottom: 24px; }
+    .btn-outline-dark {
+      border: 2px solid var(--text); color: var(--text); background: transparent;
+      font-size: 15px; font-weight: 700; padding: 12px 28px; border-radius: 8px;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+    }
+    .btn-outline-dark:hover { background: var(--text); color: var(--white); }
+    .intro-note { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+
+    /* ─── SECTION COMMON ─── */
+    .feature-section { padding: 96px 24px; max-width: 1200px; margin: 0 auto; }
+    .feature-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .feature-wrap.reverse { direction: rtl; }
+    .feature-wrap.reverse > * { direction: ltr; }
+    .section-eyebrow {
+      font-size: 13px; font-weight: 700; color: var(--primary);
+      letter-spacing: 0.5px; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .feature-h2 {
+      font-size: clamp(24px, 3vw, 36px); font-weight: 900;
+      line-height: 1.25; letter-spacing: -0.5px; margin-bottom: 16px;
+    }
+    .feature-desc { font-size: 16px; color: var(--text-sub); line-height: 1.75; margin-bottom: 28px; }
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .check-list li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; color: var(--text-sub);
+    }
+    .check-list li::before {
+      content: ''; width: 20px; height: 20px; flex-shrink: 0;
+      background: var(--green); border-radius: 50%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      background-size: 12px; background-repeat: no-repeat; background-position: center;
+    }
+    .feature-mockup {
+      background: var(--bg-gray); border-radius: 16px; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); overflow: hidden; position: relative;
+    }
+
+    /* 공고 관리 mockup */
+    .mockup-ad { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .mockup-ad-header { display: flex; gap: 8px; align-items: center; }
+    .mockup-ad-status {
+      background: #dcfce7; color: #16a34a; font-size: 11px; font-weight: 700;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .mockup-ad-title { font-size: 13px; font-weight: 700; }
+    .mockup-ad-row {
+      background: var(--white); border-radius: 8px; padding: 14px;
+      border: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px;
+    }
+    .mockup-ad-meta { font-size: 11px; color: var(--text-muted); }
+    .mockup-ad-stats { display: flex; gap: 12px; }
+    .mockup-stat { font-size: 12px; color: var(--text-sub); }
+    .mockup-stat strong { font-weight: 700; color: var(--text); }
+
+    /* 지원자 관리 mockup */
+    .mockup-ats { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .ats-kanban { display: flex; gap: 8px; flex: 1; }
+    .ats-col {
+      flex: 1; background: var(--white); border-radius: 8px; border: 1px solid var(--border);
+      padding: 10px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .ats-col-title { font-size: 11px; font-weight: 700; color: var(--text-sub); margin-bottom: 4px; }
+    .ats-card { background: var(--bg-light); border-radius: 6px; padding: 8px; border: 1px solid var(--border); }
+    .ats-name { font-size: 12px; font-weight: 700; }
+    .ats-tag { font-size: 10px; color: var(--text-muted); }
+
+    /* 인재풀 mockup */
+    .mockup-talent { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .talent-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .talent-filter-tag {
+      background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .talent-list { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .talent-card {
+      background: var(--white); border-radius: 8px; border: 1px solid var(--border);
+      padding: 12px; display: flex; align-items: center; gap: 10px;
+    }
+    .talent-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: #c7d2fe;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #4338ca; flex-shrink: 0;
+    }
+    .talent-info { flex: 1; }
+    .talent-name { font-size: 13px; font-weight: 700; }
+    .talent-meta { font-size: 11px; color: var(--text-muted); }
+    .talent-btn {
+      background: #111827; color: var(--white); border: none;
+      font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 5px; cursor: pointer;
+    }
+
+    /* ─── ALT BG ─── */
+    .alt-section { background: var(--bg-light); }
+
+    /* ─── QUICK MENU ─── */
+    #services {
+      padding: 96px 24px; background: var(--white); border-top: 1px solid var(--border);
+    }
+    .services-inner { max-width: 1200px; margin: 0 auto; }
+    .section-title { font-size: 32px; font-weight: 900; text-align: center; margin-bottom: 12px; }
+    .section-subtitle { text-align: center; color: var(--text-sub); margin-bottom: 48px; font-size: 16px; }
+    .service-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .service-card {
+      border: 1px solid var(--border); border-radius: 16px; padding: 32px;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; background: var(--white);
+    }
+    .service-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .service-card-tag { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .service-card-name { font-size: 24px; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+    .service-card-name .arrow { color: var(--text-muted); font-size: 20px; }
+    .service-card-desc { font-size: 14px; color: var(--text-sub); line-height: 1.7; }
+
+    /* ─── CUSTOMER CASES ─── */
+    #cases { padding: 96px 24px; background: var(--bg-light); border-top: 1px solid var(--border); }
+    .cases-inner { max-width: 1200px; margin: 0 auto; }
+    .case-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .case-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .case-logo {
+      width: 80px; height: 40px; background: var(--bg-gray); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+    }
+    .case-company { font-size: 14px; font-weight: 700; }
+    .case-industry { font-size: 12px; color: var(--text-muted); }
+    .case-quote {
+      font-size: 14px; color: var(--text-sub); line-height: 1.75;
+      border-left: 3px solid #dbeafe; padding-left: 14px; font-style: italic;
+    }
+    .case-tag {
+      display: inline-block; background: #f0f9ff; color: #0369a1;
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; width: fit-content;
+    }
+
+    /* ─── CLOSING CTA ─── */
+    #closing { padding: 96px 24px; background: #111827; text-align: center; }
+    .closing-inner { max-width: 640px; margin: 0 auto; }
+    .closing-label { font-size: 13px; color: #6b7280; font-weight: 700; letter-spacing: 1px; margin-bottom: 20px; }
+    .closing-h2 {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 900;
+      color: var(--white); line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px;
+    }
+    .closing-sub { font-size: 16px; color: #9ca3af; line-height: 1.7; margin-bottom: 40px; }
+    .closing-cta {
+      background: #1d4ed8; color: var(--white); border: none;
+      font-size: 17px; font-weight: 700; padding: 16px 40px; border-radius: 8px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .closing-cta:hover { background: #1e40af; }
+
+    /* ─── FOOTER ─── */
+    footer { background: #1f2937; padding: 32px 24px; text-align: center; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: #6b7280; text-decoration: none; }
+    .footer-links a:hover { color: #d1d5db; }
+    .footer-copy { font-size: 12px; color: #6b7280; }
+
+    /* ─── BOTTOM STICKY BAR ─── */
+    #bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+      background: var(--white); border-top: 1px solid var(--border);
+      padding: 12px 24px; display: flex; justify-content: flex-end;
+      align-items: center; gap: 12px;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    #bottom-bar.visible { transform: translateY(0); }
+    .bb-link {
+      font-size: 14px; font-weight: 600; color: var(--text-sub);
+      background: none; border: none; cursor: pointer; padding: 8px 16px;
+      border-radius: 6px; transition: background 0.15s;
+    }
+    .bb-link:hover { background: var(--bg-gray); }
+    .bb-primary {
+      background: #111827; color: var(--white); border: none;
+      font-size: 14px; font-weight: 700; padding: 10px 24px; border-radius: 8px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .bb-primary:hover { background: #1f2937; }
+
+    @media (max-width: 768px) {
+      .feature-wrap, .feature-wrap.reverse { grid-template-columns: 1fr; direction: ltr; }
+      .service-cards, .case-cards { grid-template-columns: 1fr; }
+      .hero-stats { gap: 24px; }
+      .gnb-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ① GNB -->
+<header id="gnb">
+  <div class="gnb-inner">
+    <div class="gnb-left">
+      <span class="gnb-logo">JOBKOREA</span>
+      <nav class="gnb-nav">
+        <a href="#" class="active" data-section="hero">기업 홈</a>
+        <a href="#job-mgmt" data-section="job-mgmt">공고 관리</a>
+        <a href="#applicant-mgmt" data-section="applicant-mgmt">지원자 관리</a>
+        <a href="#talent" data-section="talent">인재풀</a>
+        <span class="gnb-divider"></span>
+        <a href="#services" data-section="services" style="gap:4px;">
+          <svg class="gnb-onepick-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5 5.5-5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          원픽
+          <svg class="gnb-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="#services" data-section="services">채용 상품</a>
+        <a href="#">헤드헌팅</a>
+        <a href="#">기업라운지</a>
+      </nav>
+    </div>
+    <div class="gnb-right">
+      <button class="gnb-btn-login" onclick="alert('로그인/회원가입 페이지로 이동합니다.')">로그인/회원가입</button>
+    </div>
+  </div>
+</header>
+
+<!-- GNB 높이만큼 오프셋 -->
+<div class="gnb-offset"></div>
+
+<!-- ② 공지사항 -->
+<div id="notice">
+  <div class="notice-inner">
+    <span class="notice-tag">공지</span>
+    <span class="notice-text">
+      공지사항 노출 영역입니다. &nbsp;<a href="#">잡코리아 채용 솔루션 2026 상반기 업데이트 안내 →</a>
+    </span>
+  </div>
+</div>
+
+<!-- ③ Hero -->
+<section id="hero">
+  <div class="hero-label">국내 1위 채용 플랫폼</div>
+  <h1 class="hero-h1">
+    국내 최대 플랫폼에서<br/>채용의 모든 과정 해결하세요
+  </h1>
+  <p class="hero-sub">
+    서브 문구 노출합니다
+  </p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">월 800만+</span>
+      <div class="stat-label">월 방문자 수</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">등록 이력서 430만+</span>
+      <div class="stat-label">활성 이력서 보유</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">이용 기업 8만+</span>
+      <div class="stat-label">기업 고객사</div>
+    </div>
+  </div>
+  <button class="hero-cta" onclick="alert('무료 시작하기 페이지로 이동합니다.')">무료로 시작하기</button>
+  <div class="hero-note">비주얼 (제품 스크린 샷 or 일러스트)</div>
+
+  <!-- 고객사 로고 롤링 -->
+  <div class="logo-marquee-wrap">
+    <div class="logo-marquee-track" id="logoTrack">
+      <div class="logo-box">Logo A</div>
+      <div class="logo-box">Logo B</div>
+      <div class="logo-box">Logo C</div>
+      <div class="logo-box">Logo D</div>
+      <div class="logo-box">Logo E</div>
+      <div class="logo-box">Logo F</div>
+      <div class="logo-box">Logo G</div>
+      <div class="logo-box">Logo H</div>
+      <!-- 롤링을 위한 복제본 -->
+      <div class="logo-box">Logo A</div>
+      <div class="logo-box">Logo B</div>
+      <div class="logo-box">Logo C</div>
+      <div class="logo-box">Logo D</div>
+      <div class="logo-box">Logo E</div>
+      <div class="logo-box">Logo F</div>
+      <div class="logo-box">Logo G</div>
+      <div class="logo-box">Logo H</div>
+    </div>
+  </div>
+  <div class="logos-caption">고객사 로고 롤링 (대기업 / 중견 / 스타트업 혼합)</div>
+</section>
+
+<!-- ④ 서비스 소개서 받기 -->
+<section id="intro">
+  <div class="intro-inner">
+    <div class="intro-tag">리드 수집 (타겟 · 잠재고객)</div>
+    <h2 class="intro-h2">잡코리아가 처음이신가요?</h2>
+    <button class="btn-outline-dark" onclick="alert('서비스 소개서를 이메일로 발송합니다.')">서비스 소개서 받기</button>
+    <div class="intro-note">CTA 클릭 시 입력 폼을 통해 리드 수집</div>
+  </div>
+</section>
+
+<!-- ⑤ 공고 관리 -->
+<section id="job-mgmt">
+  <div class="feature-section">
+    <div class="feature-wrap">
+      <div class="feature-mockup">
+        <div class="mockup-ad">
+          <div style="font-size:14px;font-weight:800;margin-bottom:4px;">공고 관리</div>
+          <div class="mockup-ad-row">
+            <div class="mockup-ad-header">
+              <span class="mockup-ad-status">진행중</span>
+              <span class="mockup-ad-title">백엔드 개발자 채용</span>
+            </div>
+            <div class="mockup-ad-meta">2026.06.01 ~ 2026.06.30 · 경력 3년↑</div>
+            <div class="mockup-ad-stats">
+              <span class="mockup-stat">조회 <strong>2,841</strong></span>
+              <span class="mockup-stat">지원 <strong>47</strong></span>
+              <span class="mockup-stat">즐겨찾기 <strong>128</strong></span>
+            </div>
+          </div>
+          <div class="mockup-ad-row">
+            <div class="mockup-ad-header">
+              <span class="mockup-ad-status">진행중</span>
+              <span class="mockup-ad-title">프로덕트 디자이너 채용</span>
+            </div>
+            <div class="mockup-ad-meta">2026.06.01 ~ 2026.06.20 · 신입/경력</div>
+            <div class="mockup-ad-stats">
+              <span class="mockup-stat">조회 <strong>1,203</strong></span>
+              <span class="mockup-stat">지원 <strong>23</strong></span>
+              <span class="mockup-stat">즐겨찾기 <strong>64</strong></span>
+            </div>
+          </div>
+          <div class="mockup-ad-row" style="opacity:0.5;">
+            <div class="mockup-ad-header">
+              <span class="mockup-ad-status" style="background:#fee2e2;color:#dc2626;">마감</span>
+              <span class="mockup-ad-title">데이터 분석가</span>
+            </div>
+            <div class="mockup-ad-meta">2026.05.01 ~ 2026.05.31</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-content">
+        <div class="section-eyebrow">📋 공고 관리</div>
+        <h2 class="feature-h2">
+          월 방문자 N만 명이<br/>오늘도 새 공고를<br/>확인해요
+        </h2>
+        <p class="feature-desc">서브 문구 노출합니다</p>
+        <ul class="check-list">
+          <li>간편한 공고 작성</li>
+          <li>지원자 알림 수신</li>
+          <li>공고 성과 확인</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ 지원자 관리 -->
+<div class="alt-section">
+  <section id="applicant-mgmt">
+    <div class="feature-section">
+      <div class="feature-wrap reverse">
+        <div class="feature-content">
+          <div class="section-eyebrow">👥 지원자 관리</div>
+          <h2 class="feature-h2">
+            대규모 채용 지원자도<br/>안전하고 간편하게
+          </h2>
+          <p class="feature-desc">서브 문구 노출합니다</p>
+          <ul class="check-list">
+            <li>한눈에 볼 수 있는 지원자 현황</li>
+            <li>채용 단계별 상태 관리</li>
+            <li>메모 및 평가 기록</li>
+          </ul>
+        </div>
+        <div class="feature-mockup">
+          <div class="mockup-ats">
+            <div style="font-size:14px;font-weight:800;margin-bottom:4px;">지원자 관리</div>
+            <div class="ats-kanban">
+              <div class="ats-col">
+                <div class="ats-col-title">서류 검토 (12)</div>
+                <div class="ats-card"><div class="ats-name">김지원</div><div class="ats-tag">5년 · 개발</div></div>
+                <div class="ats-card"><div class="ats-name">이서연</div><div class="ats-tag">3년 · 디자인</div></div>
+              </div>
+              <div class="ats-col">
+                <div class="ats-col-title">면접 예정 (5)</div>
+                <div class="ats-card" style="background:#eff6ff;"><div class="ats-name">박민준</div><div class="ats-tag">7년 · 개발</div></div>
+              </div>
+              <div class="ats-col">
+                <div class="ats-col-title">최종 합격 (2)</div>
+                <div class="ats-card" style="background:#dcfce7;"><div class="ats-name">최유진</div><div class="ats-tag">4년 · PM</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ⑦ 인재풀 -->
+<section id="talent">
+  <div class="feature-section">
+    <div class="feature-wrap">
+      <div class="feature-mockup">
+        <div class="mockup-talent">
+          <div style="font-size:14px;font-weight:800;margin-bottom:4px;">인재풀</div>
+          <div class="talent-filters">
+            <span class="talent-filter-tag">개발</span>
+            <span class="talent-filter-tag">경력 5년↑</span>
+            <span class="talent-filter-tag">서울</span>
+            <span class="talent-filter-tag">즉시 입사 가능</span>
+          </div>
+          <div class="talent-list">
+            <div class="talent-card">
+              <div class="talent-avatar">K</div>
+              <div class="talent-info">
+                <div class="talent-name">김**</div>
+                <div class="talent-meta">백엔드 개발 · 8년 · 서울</div>
+              </div>
+              <button class="talent-btn">포지션 제안</button>
+            </div>
+            <div class="talent-card">
+              <div class="talent-avatar" style="background:#fce7f3;color:#9d174d;">L</div>
+              <div class="talent-info">
+                <div class="talent-name">이**</div>
+                <div class="talent-meta">iOS 개발 · 5년 · 경기</div>
+              </div>
+              <button class="talent-btn">포지션 제안</button>
+            </div>
+            <div class="talent-card">
+              <div class="talent-avatar" style="background:#dcfce7;color:#15803d;">P</div>
+              <div class="talent-info">
+                <div class="talent-name">박**</div>
+                <div class="talent-meta">프론트엔드 · 6년 · 서울</div>
+              </div>
+              <button class="talent-btn">포지션 제안</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-content">
+        <div class="section-eyebrow">🔍 인재풀</div>
+        <h2 class="feature-h2">
+          N만 인재,<br/>기다리지말고<br/>먼저 다가가세요
+        </h2>
+        <p class="feature-desc">조건에 맞는 인재에게 직접 포지션을 제안할 수 있어요.</p>
+        <ul class="check-list">
+          <li>경력 · 직무 · 스킬 조건으로 검색</li>
+          <li>검심 인재에게 프로직접 제안 발송</li>
+          <li>제안 수락 시 연락처 공개</li>
+        </ul>
+        <div style="margin-top:24px;">
+          <button class="hero-cta" style="font-size:15px;padding:12px 24px;" onclick="alert('인재풀 보기 페이지로 이동합니다.')">인재 보기 →</button>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--text-muted);">CTA 클릭 시, 인재 검색으로 랜딩</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ 제공 서비스 퀵메뉴 -->
+<section id="services">
+  <div class="services-inner">
+    <h2 class="section-title">타이틀</h2>
+    <div class="service-cards">
+      <div class="service-card" onclick="alert('원픽 페이지로 이동합니다.')">
+        <div class="service-card-name">원픽 <span class="arrow">→</span></div>
+        <div class="service-card-desc">서브 문구 노출합니다 (1줄)</div>
+      </div>
+      <div class="service-card" onclick="alert('헤드헌팅 페이지로 이동합니다.')">
+        <div class="service-card-name">헤드헌팅 <span class="arrow">→</span></div>
+        <div class="service-card-desc">서브 문구 노출합니다 (1줄)</div>
+      </div>
+      <div class="service-card" onclick="alert('나인하이어 페이지로 이동합니다.')">
+        <div class="service-card-name">나인하이어(ATS) <span class="arrow">→</span></div>
+        <div class="service-card-desc">서브 문구 노출합니다 (1줄)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑨ 고객 사례 -->
+<section id="cases">
+  <div class="cases-inner">
+    <h2 class="section-title">고객 사례</h2>
+    <p class="section-subtitle">수치 기반 실제 후기 노출, 위 내용들이 우리의 주장이었다면, 실제로 고객들도 만족한다는 걸 '증명' 하는 구간</p>
+    <div class="case-cards">
+      <div class="case-card">
+        <div class="case-logo">기업 로고</div>
+        <div>
+          <div class="case-company">㈜테크스타트</div>
+          <div class="case-industry">IT·소프트웨어</div>
+        </div>
+        <div class="case-quote">"단기간 콘텐츠 · 도입 전 후 변화를 직접 경험한 이야기"</div>
+        <span class="case-tag">채용 기간 50% 단축</span>
+      </div>
+      <div class="case-card">
+        <div class="case-logo">기업 로고</div>
+        <div>
+          <div class="case-company">글로벌유통</div>
+          <div class="case-industry">유통·물류</div>
+        </div>
+        <div class="case-quote">"이 서비스 대비 인재풀 규모가 확연히 달라요. 3개월 간 7명을 채용했어요."</div>
+        <span class="case-tag">3개월 7명 채용</span>
+      </div>
+      <div class="case-card">
+        <div class="case-logo">기업 로고</div>
+        <div>
+          <div class="case-company">헬스케어플러스</div>
+          <div class="case-industry">의료·바이오</div>
+        </div>
+        <div class="case-quote">"공고를 2~3번째 올렸을 때도 채용이 안됐는데, 잡코리아 인재풀로는 빠르게 해결됐습니다."</div>
+        <span class="case-tag">핵심 인재 즉시 확보</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑩ 클로징 CTA -->
+<section id="closing">
+  <div class="closing-inner">
+    <div class="closing-label">클로징 CTA</div>
+    <h2 class="closing-h2">회원 가입 유도<br/>문구 노출</h2>
+    <button class="closing-cta" onclick="alert('무료 시작하기 페이지로 이동합니다.')">무료로 시작하기</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="#">서비스 이용약관</a>
+      <a href="#">개인정보처리방침</a>
+      <a href="#">고객센터</a>
+      <a href="#">회사 소개</a>
+    </div>
+    <div class="footer-copy">© 2026 JOBKOREA Corp. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- 하단 고정 바 (공고 관리 섹션 진입 시 노출) -->
+<div id="bottom-bar">
+  <button class="bb-link" onclick="alert('서비스 소개서 발송 페이지로 이동합니다.')">서비스 소개서 받기</button>
+  <button class="bb-primary" onclick="alert('무료 시작하기 페이지로 이동합니다.')">무료로 시작하기</button>
+</div>
+
+<script>
+  // ── 스크롤: GNB 활성 + 하단바 노출 제어
+  const jobMgmtSection = document.getElementById('job-mgmt');
+  const bottomBar = document.getElementById('bottom-bar');
+  const navLinks = document.querySelectorAll('.gnb-nav a[data-section]');
+
+  // 앵커 활성화 대상: 기업홈·공고관리·지원자관리만 (인재풀 이후는 별도 페이지 이동)
+  const anchorSections = ['hero', 'job-mgmt', 'applicant-mgmt'];
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY + 90;
+
+    // 하단 바: 공고 관리 섹션 top에 도달하면 노출
+    if (scrollY >= jobMgmtSection.offsetTop) {
+      bottomBar.classList.add('visible');
+    } else {
+      bottomBar.classList.remove('visible');
+    }
+
+    // GNB 활성 메뉴 — 인재풀 섹션 진입 이후엔 active 제거
+    const talentTop = document.getElementById('talent').offsetTop;
+    if (scrollY >= talentTop) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      return;
+    }
+
+    let current = 'hero';
+    anchorSections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) current = id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.dataset.section === current);
+    });
+  });
+
+  // ── GNB 링크 smooth scroll
+  document.querySelectorAll('.gnb-nav a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href.length > 1) {
+        e.preventDefault();
+        const el = document.getElementById(href.slice(1));
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
