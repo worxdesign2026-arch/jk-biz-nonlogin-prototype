@@ -56,7 +56,6 @@
       display: flex; align-items: center; gap: 4px;
     }
     .gnb-nav a:hover { background: rgba(255,255,255,0.08); }
-    .gnb-nav a.active { background: #444444; color: var(--white); }
     .gnb-divider {
       width: 1px; height: 16px; background: #6a6a6a; margin: 0 2px; flex-shrink: 0;
     }
@@ -366,7 +365,7 @@
     <div class="gnb-left">
       <span class="gnb-logo">JOBKOREA</span>
       <nav class="gnb-nav">
-        <a href="#" class="active" data-section="hero">기업 홈</a>
+        <a href="#" data-section="hero">기업 홈</a>
         <a href="#job-mgmt" data-section="job-mgmt">공고 관리</a>
         <a href="#applicant-mgmt" data-section="applicant-mgmt">지원자 관리</a>
         <a href="#talent" data-section="talent">인재풀</a>
@@ -711,9 +710,6 @@
   const bottomBar = document.getElementById('bottom-bar');
   const navLinks = document.querySelectorAll('.gnb-nav a[data-section]');
 
-  // 앵커 활성화 대상: 기업홈·공고관리·지원자관리만 (인재풀 이후는 별도 페이지 이동)
-  const anchorSections = ['hero', 'job-mgmt', 'applicant-mgmt'];
-
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY + 90;
 
@@ -723,22 +719,6 @@
     } else {
       bottomBar.classList.remove('visible');
     }
-
-    // GNB 활성 메뉴 — 인재풀 섹션 진입 이후엔 active 제거
-    const talentTop = document.getElementById('talent').offsetTop;
-    if (scrollY >= talentTop) {
-      navLinks.forEach(a => a.classList.remove('active'));
-      return;
-    }
-
-    let current = 'hero';
-    anchorSections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.offsetTop <= scrollY) current = id;
-    });
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.dataset.section === current);
-    });
   });
 
   // ── GNB 링크 smooth scroll
